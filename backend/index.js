@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const { default: axios } = require("axios");
+const dotenv = require("dotenv").config();
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -8,7 +11,21 @@ app.use(cors({ origin: true }));
 
 app.post("/authenticate", async (req, res) => {
   const { username } = req.body;
-  return res.json({ username: username, secret: "sh256..." });
+  try {
+    const r = await axios.put(
+      `https://api.chatengine.io/users/`,
+      {
+        username: username,
+        secret: "mafs123",
+      },
+      {
+        headers: { "private-key": process.env.CHAT_ENGINE_PRIVATE_KEY },
+      }
+    );
+    return res.status(r.status).json(r.data);
+  } catch (e) {
+    return res.status(500).json(e.message);
+  }
 });
 
-app.listen(3001);
+app.listen(PORT, console.log(`App run on the port: ${PORT}`));
