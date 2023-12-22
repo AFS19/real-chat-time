@@ -16,7 +16,7 @@ app.post("/authenticate", async (req, res) => {
       `https://api.chatengine.io/users/`,
       {
         username: username,
-        secret: "mafs123",
+        secret: username,
       },
       {
         headers: { "private-key": process.env.CHAT_ENGINE_PRIVATE_KEY },
